@@ -5,16 +5,15 @@ import { CategoryCard } from "@/components/home/category-card"
 import { HeroSlider } from "@/components/home/hero-slider"
 import { SectionHeading } from "@/components/home/section-heading"
 import { StudioCard } from "@/components/home/studio-card"
-import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
   aboutStats,
   categories,
   featuredStudios,
+  guarantees,
   howItWorksSteps,
 } from "@/lib/home-data"
-import { navLinks } from "@/lib/nav-links"
 
 const trustPoints = [
   { icon: ShieldCheck, label: "Verified spaces" },
@@ -27,22 +26,6 @@ function Home() {
     <div className="flex flex-1 flex-col">
       <HeroSlider />
 
-      <section className="bg-white py-20 md:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Categories"
-            title="Explore by discipline"
-            description="From daylight lofts to soundproofed booths — find the space that fits your craft."
-            align="center"
-          />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="bg-[#0B1F3A]/5 py-20 md:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
@@ -53,6 +36,7 @@ function Home() {
             />
             <Button
               render={<Link href="/studios" />}
+              nativeButton={false}
               variant="outline"
               className="border-[#0B1F3A]/20 bg-transparent font-medium tracking-[0.1em] text-[#0B1F3A] uppercase transition-all duration-300 hover:border-[#3B82F6] hover:bg-[#3B82F6]/10 hover:text-[#3B82F6]"
             >
@@ -67,16 +51,35 @@ function Home() {
         </div>
       </section>
 
-      <section id="how-it-works" className="scroll-mt-16 bg-[#0B1F3A] py-20 md:py-24">
+      <section className="bg-white py-20 md:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
-            eyebrow="How it works"
-            title="From search to studio in three steps"
+            eyebrow="Categories"
+            title="Browse by categories"
+            description="From daylight lofts to soundproofed booths — find the space that fits your craft."
+            align="center"
+          />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="how-it-works"
+        className="scroll-mt-16 bg-[#0B1F3A] py-20 md:py-24"
+      >
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="How booking works"
+            title="From search to studio in four steps"
             description="No endless email chains. No surprise fees. Just the space you need, when you need it."
             tone="dark"
             align="center"
           />
-          <ol className="mt-14 grid gap-8 md:grid-cols-3">
+          <ol className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {howItWorksSteps.map((step) => {
               const Icon = step.icon
               return (
@@ -102,6 +105,38 @@ function Home() {
               )
             })}
           </ol>
+        </div>
+      </section>
+
+      <section className="bg-[#0B1F3A]/5 py-20 md:py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Our promise"
+            title="Host Guarantee & Creator Support"
+            description="Every booking is backed by real protections — for the people who open their doors and the people who walk through them."
+            align="center"
+          />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {guarantees.map((guarantee) => {
+              const Icon = guarantee.icon
+              return (
+                <div
+                  key={guarantee.id}
+                  className="flex flex-col items-start gap-4 rounded-xl border border-[#0B1F3A]/10 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[#3B82F6]/40 hover:shadow-[0_16px_40px_-20px_rgba(59,130,246,0.5)]"
+                >
+                  <span className="flex size-12 items-center justify-center rounded-lg bg-[#3B82F6]/10 text-[#3B82F6]">
+                    <Icon aria-hidden className="size-5" strokeWidth={1.75} />
+                  </span>
+                  <h3 className="font-heading text-base font-semibold text-[#0B1F3A]">
+                    {guarantee.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[#0B1F3A]/60">
+                    {guarantee.description}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
@@ -157,6 +192,7 @@ function Home() {
               </p>
               <Button
                 render={<Link href="/studios" />}
+                nativeButton={false}
                 className="mt-8 w-full bg-[#3B82F6] font-medium tracking-[0.1em] text-white uppercase shadow-[0_4px_16px_-6px_rgba(59,130,246,0.65)] transition-all duration-300 hover:-translate-y-px hover:bg-[#2563EB] hover:shadow-[0_6px_22px_-6px_rgba(59,130,246,0.85)] active:translate-y-0"
               >
                 Explore Studios
@@ -166,43 +202,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-white/10 bg-[#0B1F3A]">
-        <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
-            <div className="max-w-sm">
-              <Link
-                href="/"
-                className="inline-flex items-center"
-                aria-label="StudioSpace home"
-              >
-                <Logo wordmarkClassName="text-white" />
-              </Link>
-              <p className="mt-4 text-sm leading-relaxed text-white/60">
-                Discover and book premium creative studios by the hour.
-                Photography, film, music, and event spaces — all in one place.
-              </p>
-            </div>
-            <nav
-              aria-label="Footer"
-              className="flex flex-wrap gap-x-8 gap-y-3"
-            >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm text-white/70 transition-colors duration-300 hover:text-[#3B82F6]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-          <div className="mt-10 border-t border-white/10 pt-6 text-xs text-white/50">
-            © 2026 StudioSpace. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

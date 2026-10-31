@@ -76,6 +76,7 @@ function HeroSlider() {
                     <div className="mt-8 flex flex-wrap gap-3">
                       <Button
                         render={<Link href="/studios" />}
+                        nativeButton={false}
                         size="lg"
                         className="bg-[#3B82F6] px-6 font-medium tracking-[0.1em] text-white uppercase shadow-[0_4px_16px_-6px_rgba(59,130,246,0.65)] transition-all duration-300 hover:-translate-y-px hover:bg-[#2563EB] hover:shadow-[0_6px_22px_-6px_rgba(59,130,246,0.85)] active:translate-y-0"
                       >
@@ -83,6 +84,7 @@ function HeroSlider() {
                       </Button>
                       <Button
                         render={<Link href="#how-it-works" />}
+                        nativeButton={false}
                         variant="outline"
                         size="lg"
                         className="border-white/40 bg-transparent px-6 font-medium tracking-[0.1em] text-white uppercase transition-all duration-300 hover:border-[#3B82F6] hover:bg-[#3B82F6]/10 hover:text-white hover:shadow-[0_0_18px_-6px_rgba(59,130,246,0.6)]"

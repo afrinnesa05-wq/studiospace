@@ -1,12 +1,18 @@
 import type { LucideIcon } from "lucide-react"
 import {
+  BadgeCheck,
   Camera,
   CalendarDays,
   Clapperboard,
   Clock,
+  Headset,
+  Lock,
+  Mic,
   Music,
   PartyPopper,
+  ShieldCheck,
   Sparkles,
+  Star,
   Video,
 } from "lucide-react"
 
@@ -49,14 +55,46 @@ export type Category = {
   id: string
   label: string
   count: number
+  href: string
   icon: LucideIcon
 }
 
 export const categories: Category[] = [
-  { id: "photography", label: "Photography", count: 128, icon: Camera },
-  { id: "film", label: "Film & Video", count: 86, icon: Video },
-  { id: "music", label: "Music & Recording", count: 74, icon: Music },
-  { id: "events", label: "Events & Rehearsal", count: 52, icon: CalendarDays },
+  {
+    id: "photography",
+    label: "Photography",
+    count: 128,
+    href: "/studios?category=photography",
+    icon: Camera,
+  },
+  {
+    id: "film",
+    label: "Film & Video",
+    count: 86,
+    href: "/studios?category=film",
+    icon: Video,
+  },
+  {
+    id: "music",
+    label: "Music & Recording",
+    count: 74,
+    href: "/studios?category=music",
+    icon: Music,
+  },
+  {
+    id: "events",
+    label: "Events & Rehearsal",
+    count: 52,
+    href: "/studios?category=events",
+    icon: CalendarDays,
+  },
+  {
+    id: "podcasts",
+    label: "Podcasts & Broadcast",
+    count: 45,
+    href: "/studios?category=podcasts",
+    icon: Mic,
+  },
 ]
 
 export type Studio = {
@@ -166,6 +204,51 @@ export const howItWorksSteps: Step[] = [
     description:
       "Show up, plug in, and do your best work. Every booking includes host support and flexible cancellation.",
     icon: Camera,
+  },
+  {
+    number: "04",
+    title: "Share",
+    description:
+      "Upload your shots, tag the studio, and help the next creator find their perfect space with an honest review.",
+    icon: Star,
+  },
+]
+
+export type Guarantee = {
+  id: string
+  title: string
+  description: string
+  icon: LucideIcon
+}
+
+export const guarantees: Guarantee[] = [
+  {
+    id: "host-guarantee",
+    title: "Host Guarantee",
+    description:
+      "Every booking is covered up to $1M in damage protection, so both hosts and creators can book with confidence.",
+    icon: ShieldCheck,
+  },
+  {
+    id: "verified-listings",
+    title: "Verified listings",
+    description:
+      "Each studio is inspected and photographed by our team before it goes live — what you see is what you get.",
+    icon: BadgeCheck,
+  },
+  {
+    id: "secure-payment",
+    title: "Secure payments",
+    description:
+      "Funds are held safely and only released to the host 24 hours after check-in. No cash, no surprises.",
+    icon: Lock,
+  },
+  {
+    id: "creator-support",
+    title: "Creator support",
+    description:
+      "Real humans, 7 days a week. If anything goes sideways before or during your session, we resolve it fast.",
+    icon: Headset,
   },
 ]
 
