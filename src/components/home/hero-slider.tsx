@@ -36,6 +36,21 @@ function HeroSlider() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {heroSlides.map((slide, i) => (
+        <div
+          key={`background-${slide.id}`}
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-out",
+            i === index ? "opacity-100" : "opacity-0"
+          )}
+          style={{ backgroundImage: `url(${slide.image})` }}
+        />
+      ))}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[#0B1F3A]/75"
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute -top-48 right-[-12%] size-[36rem] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.28),transparent_65%)]"
@@ -75,7 +90,7 @@ function HeroSlider() {
                     </p>
                     <div className="mt-8 flex flex-wrap gap-3">
                       <Button
-                        render={<Link href="/studios" />}
+                        render={<Link href="/#featured-studios" />}
                         nativeButton={false}
                         size="lg"
                         className="bg-[#3B82F6] px-6 font-medium tracking-[0.1em] text-white uppercase shadow-[0_4px_16px_-6px_rgba(59,130,246,0.65)] transition-all duration-300 hover:-translate-y-px hover:bg-[#2563EB] hover:shadow-[0_6px_22px_-6px_rgba(59,130,246,0.85)] active:translate-y-0"
@@ -83,7 +98,7 @@ function HeroSlider() {
                         Explore Studios
                       </Button>
                       <Button
-                        render={<Link href="#how-it-works" />}
+                        render={<Link href="/#how-it-works" />}
                         nativeButton={false}
                         variant="outline"
                         size="lg"

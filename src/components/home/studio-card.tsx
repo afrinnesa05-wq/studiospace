@@ -1,74 +1,120 @@
-import Link from "next/link"
-import { ArrowRight, MapPin, Star } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
+
 import { Card } from "@/components/ui/card"
-import type { Studio } from "@/lib/home-data"
+import { StudioImage } from "@/components/studios/studio-image"
+import type { ExploreStudio } from "@/lib/studios-api"
 
 type StudioCardProps = {
-  studio: Studio
+  studio: ExploreStudio
+}
+
+function CategoryIcon({
+  category,
+  className,
+}: {
+  category: string
+  className?: string
+}) {
+  const value = category.toLowerCase()
+
+  let symbol = "✦"
+
+  if (value.includes("photo")) symbol = "▣"
+  else if (
+    value.includes("sound") ||
+    value.includes("film") ||
+    value.includes("video")
+  ) {
+    symbol = "▶"
+  } else if (
+    value.includes("music") ||
+    value.includes("recording")
+  ) {
+    symbol = "♫"
+  } else if (
+    value.includes("podcast") ||
+    value.includes("broadcast")
+  ) {
+    symbol = "◉"
+  } else if (
+    value.includes("art") ||
+    value.includes("workshop")
+  ) {
+    symbol = "✿"
+  }
+
+  return (
+    <span aria-hidden className={className}>
+      {symbol}
+    </span>
+  )
 }
 
 function StudioCard({ studio }: StudioCardProps) {
-  const Icon = studio.icon
   return (
-    <Card className="group gap-0 p-0 py-0 ring-1 ring-[#0B1F3A]/10 transition-all duration-300 hover:-translate-y-1 hover:ring-[#3B82F6]/40 hover:shadow-[0_20px_48px_-24px_rgba(59,130,246,0.55)]">
+    <Card className="studio-featured-card group gap-0 border border-[#0B1F3A]/10 bg-white p-0 py-0 text-[#0B1F3A] ring-1 ring-[#0B1F3A]/10 transition-all duration-300 hover:-translate-y-1 hover:ring-[#3B82F6]/40 hover:shadow-[0_20px_48px_-24px_rgba(59,130,246,0.55)] dark:border-white/10 dark:bg-[#1B2638] dark:text-[#F8FAFC] dark:ring-white/10">
       <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#0B1F3A]">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(59,130,246,0.4),transparent_65%)]"
+        <StudioImage
+          src={studio.imageUrl}
+          alt={studio.name}
+          className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <Icon
-          aria-hidden
-          className="relative size-14 text-[#3B82F6] drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]"
-          strokeWidth={1.5}
-        />
-        {studio.badge ? (
-          <Badge className="absolute top-4 left-4 border-0 bg-[#3B82F6] text-white shadow-[0_4px_16px_-6px_rgba(59,130,246,0.65)] hover:bg-[#3B82F6]">
-            {studio.badge}
-          </Badge>
-        ) : null}
+
+        {!studio.imageUrl && (
+          <CategoryIcon
+            category={studio.category}
+            className="pointer-events-none absolute text-5xl text-[#3B82F6] drop-shadow-[0_0_20px_rgba(59,130,246,0.5)]"
+          />
+        )}
       </div>
+
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <p className="text-xs font-semibold tracking-[0.14em] text-[#3B82F6] uppercase">
             {studio.category}
           </p>
-          <h3 className="mt-1.5 font-heading text-lg font-semibold text-[#0B1F3A]">
+
+          <h3 className="mt-1.5 font-heading text-lg font-semibold text-[#0B1F3A] dark:text-[#F8FAFC]">
             {studio.name}
           </h3>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-[#0B1F3A]/60">
-            <MapPin aria-hidden className="size-3.5 text-[#3B82F6]" />
-            {studio.location}
+
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-[#0B1F3A]/60 dark:text-[#CBD5E1]">
+            <span aria-hidden>📍</span>
+            {studio.location || "Location to be announced"}
           </p>
         </div>
-        <div className="mt-auto flex items-center justify-between border-t border-[#0B1F3A]/10 pt-4">
-          <span className="text-sm text-[#0B1F3A]/60">
-            <span className="font-heading text-lg font-semibold text-[#0B1F3A]">
+
+        <div className="mt-auto flex items-center justify-between border-t border-[#0B1F3A]/10 pt-4 dark:border-white/10">
+          <span className="text-sm text-[#0B1F3A]/60 dark:text-[#CBD5E1]">
+            <span className="font-heading text-lg font-semibold text-[#0B1F3A] dark:text-[#E0C18D]">
               ${studio.pricePerHour}
             </span>
             /hour
           </span>
-          <span className="flex items-center gap-1 text-sm font-medium text-[#0B1F3A]">
-            <Star
-              aria-hidden
-              className="size-4 fill-[#3B82F6] text-[#3B82F6]"
-            />
-            {studio.rating.toFixed(1)}
-            <span className="font-normal text-[#0B1F3A]/50">
-              ({studio.reviews})
+
+          {studio.rating > 0 ? (
+            <span className="flex items-center gap-1 text-sm font-medium text-[#0B1F3A] dark:text-[#F8FAFC]">
+              <span
+                aria-hidden
+                className="text-[#3B82F6] dark:text-[#E0C18D]"
+              >
+                ★
+              </span>
+              {studio.rating.toFixed(1)}
             </span>
-          </span>
+          ) : (
+            <span className="text-xs font-medium tracking-[0.08em] text-[#0B1F3A]/50 uppercase dark:text-[#AAB7C8]">
+              New listing
+            </span>
+          )}
         </div>
+
         <Link
-          href="/studios"
-          className="inline-flex items-center gap-1 text-sm font-medium text-[#3B82F6] transition-colors hover:text-[#2563EB]"
+          href={`/studios/${studio.id}`}
+          className="inline-flex items-center gap-1 text-sm font-medium text-[#3B82F6] transition-colors hover:text-[#2563EB] dark:text-[#E0C18D] dark:hover:text-[#F0D6A8]"
         >
-          View details
-          <ArrowRight
-            aria-hidden
-            className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-          />
+          View details →
         </Link>
       </div>
     </Card>
@@ -76,3 +122,4 @@ function StudioCard({ studio }: StudioCardProps) {
 }
 
 export { StudioCard }
+

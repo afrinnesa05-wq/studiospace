@@ -1,23 +1,23 @@
+
+
+import { Suspense } from "react"
 import Link from "next/link"
 import { ArrowRight, Check, Clock, ShieldCheck } from "lucide-react"
 
-import { CategoryCard } from "@/components/home/category-card"
+import { CategoryGrid, CategoryGridSkeleton } from "@/components/home/category-grid"
+import {
+  FeaturedStudios,
+  FeaturedStudiosSkeleton,
+} from "@/components/home/featured-studios"
 import { HeroSlider } from "@/components/home/hero-slider"
 import { SectionHeading } from "@/components/home/section-heading"
-import { StudioCard } from "@/components/home/studio-card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import {
-  aboutStats,
-  categories,
-  featuredStudios,
-  guarantees,
-  howItWorksSteps,
-} from "@/lib/home-data"
+import { guarantees, howItWorksSteps } from "@/lib/home-data"
 
 const trustPoints = [
-  { icon: ShieldCheck, label: "Verified spaces" },
-  { icon: Clock, label: "Instant confirmation" },
+  { icon: ShieldCheck, label: "Honest listings" },
+  { icon: Clock, label: "Fast booking requests" },
   { icon: Check, label: "Flexible cancellation" },
 ] as const
 
@@ -26,13 +26,16 @@ function Home() {
     <div className="flex flex-1 flex-col">
       <HeroSlider />
 
-      <section className="bg-[#0B1F3A]/5 py-20 md:py-24">
+      <section
+        id="featured-studios"
+        className="scroll-mt-16 bg-[#0B1F3A]/5 py-20 md:py-24"
+      >
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <SectionHeading
               eyebrow="Featured studios"
               title="Spaces creators book again and again"
-              description="Hand-picked rooms with transparent pricing and honest reviews."
+              description="Top-rated rooms from the live catalog, with transparent pricing."
             />
             <Button
               render={<Link href="/studios" />}
@@ -43,15 +46,14 @@ function Home() {
               View all studios
             </Button>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredStudios.map((studio) => (
-              <StudioCard key={studio.id} studio={studio} />
-            ))}
-          </div>
+
+          <Suspense fallback={<FeaturedStudiosSkeleton />}>
+            <FeaturedStudios />
+          </Suspense>
         </div>
       </section>
 
-      <section className="bg-white py-20 md:py-24">
+      <section id="categories" className="scroll-mt-16 bg-white py-20 md:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             eyebrow="Categories"
@@ -59,11 +61,9 @@ function Home() {
             description="From daylight lofts to soundproofed booths — find the space that fits your craft."
             align="center"
           />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
+          <Suspense fallback={<CategoryGridSkeleton />}>
+            <CategoryGrid />
+          </Suspense>
         </div>
       </section>
 
@@ -147,26 +147,8 @@ function Home() {
               <SectionHeading
                 eyebrow="About us"
                 title="Built for creators, by creators"
-                description="StudioSpace began with a simple frustration: finding a great studio shouldn't take longer than the session itself. We partner with independent hosts and professional facilities to put hundreds of verified spaces a few clicks away."
+                description="StudioSpace began with a simple frustration: finding a great studio shouldn't take longer than the session itself. We pair independent hosts with creators so the right room is only a few clicks away."
               />
-              <dl className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4 lg:grid-cols-2">
-                {aboutStats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-xl border border-[#0B1F3A]/10 bg-white p-5"
-                  >
-                    <dt className="sr-only">{stat.label}</dt>
-                    <dd>
-                      <span className="font-heading text-3xl font-semibold text-[#0B1F3A]">
-                        {stat.value}
-                      </span>
-                      <span className="mt-1 block text-xs font-medium tracking-[0.1em] text-[#0B1F3A]/60 uppercase">
-                        {stat.label}
-                      </span>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
             </div>
             <div className="rounded-2xl bg-[#0B1F3A] p-8 md:p-12">
               <ul className="flex flex-col gap-5">
@@ -186,9 +168,9 @@ function Home() {
               </ul>
               <Separator className="my-8 bg-white/10" />
               <p className="text-sm leading-relaxed text-white/60">
-                Every listing is reviewed by our team before it goes live, so
-                what you see is what you get — accurate photos, honest
-                amenities, and transparent hourly rates.
+                Every listing shows the host&apos;s own photos, amenities, and
+                hourly rates — so what you see is what you get, with no hidden
+                charges at booking time.
               </p>
               <Button
                 render={<Link href="/studios" />}
