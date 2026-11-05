@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -10,6 +11,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -18,15 +20,18 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -39,9 +44,11 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
   --color-navy: var(--navy);
   --color-navy-foreground: var(--navy-foreground);
   --color-accent-blue: var(--accent-blue);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -54,31 +61,43 @@
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
+
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
+
   --destructive: oklch(0.577 0.245 27.325);
+
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
+
   --navy: #0b1f3a;
   --navy-foreground: #ffffff;
   --accent-blue: #3b82f6;
+
   --radius: 0.625rem;
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -90,46 +109,62 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #101827;
+  --foreground: #f8fafc;
+
+  --card: #1b2638;
+  --card-foreground: #f8fafc;
+
+  --popover: #1b2638;
+  --popover-foreground: #f8fafc;
+
+  --primary: #e0c18d;
+  --primary-foreground: #101827;
+
+  --secondary: #263449;
+  --secondary-foreground: #f8fafc;
+
+  --muted: #263449;
+  --muted-foreground: #cbd5e1;
+
+  --accent: #263449;
+  --accent-foreground: #f8fafc;
+
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 15%);
+  --ring: #64748b;
+
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+
+  --navy: #e0c18d;
+  --navy-foreground: #101827;
+  --accent-blue: #60a5fa;
+
+  --sidebar: #1b2638;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #e0c18d;
+  --sidebar-primary-foreground: #101827;
+  --sidebar-accent: #263449;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: rgb(255 255 255 / 12%);
+  --sidebar-ring: #64748b;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
@@ -139,4 +174,65 @@
   html {
     scroll-behavior: smooth;
   }
+}
+/* Global Dark Mode Text Visibility Fix */
+.dark body {
+  color: var(--foreground);
+}
+
+/* Dark mode: make hardcoded navy text readable */
+.dark .text-\[\#0B1F3A\] {
+  color: var(--foreground) !important;
+}
+
+.dark .text-\[\#0B1F3A\]\/60 {
+  color: var(--muted-foreground) !important;
+}
+
+.dark .text-\[\#0B1F3A\]\/50 {
+  color: var(--muted-foreground) !important;
+}
+
+.dark .text-black {
+  color: var(--foreground) !important;
+}
+
+/* White backgrounds become dark surfaces */
+.dark .bg-white {
+  background-color: var(--card) !important;
+  color: var(--card-foreground);
+}
+/* Category Cards - Always Visible in Dark Mode */
+.dark [data-slot="card"] {
+  border: 1px solid rgb(255 255 255 / 20%) !important;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 15%);
+}
+
+.dark [data-slot="card"]:hover {
+  border-color: #60a5fa !important;
+  box-shadow: 0 6px 20px rgb(59 130 246 / 15%);
+}
+/* StudioSpace - Dark Mode Box Styling */
+.dark [data-slot="card"],
+.dark form,
+.dark fieldset {
+  background-color: #202F46 !important;
+  border: 1px solid #405675 !important;
+  border-radius: 12px;
+}
+
+/* Input Fields */
+.dark input,
+.dark textarea,
+.dark select,
+.dark [role="combobox"] {
+  background-color: #172438 !important;
+  color: #F8FAFC !important;
+  border: 1px solid #526783 !important;
+}
+
+/* Image Upload Area */
+.dark [class*="border-dashed"] {
+  background-color: #263750 !important;
+  border: 1px dashed #7189A8 !important;
 }
