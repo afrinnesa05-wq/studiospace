@@ -38,4 +38,17 @@ Verify changes with `npm run lint` && `npx tsc --noEmit` (or just `npm run build
 ## Gotchas
 
 - The block between the `BEGIN/END:nextjs-agent-rules` markers above is rewritten by `next dev` — keep the markers, don't edit inside them.
-- `README.md` is stock create-next-app and wrong about paths (says `app/page.tsx`; the real entry is `src/app/page.tsx`).
+- `usePathname`/URL data in client components must sit inside `<Suspense>` when a route has dynamic params without `generateStaticParams` (e.g. navbar links, see `src/components/navbar.tsx`) — otherwise `next build` fails under Cache Components.
+- React Compiler lint (`react-hooks`): no sync `setState` in effect bodies (async callbacks/timers/event handlers are fine); no `const Icon = fn()` then `<Icon/>` — use direct JSX or member expressions.
+
+## Assignment conventions (StudioSpace)
+
+- Brand palette: Deep Navy `#0B1F3A`, White `#FFFFFF`, Blue `#3B82F6`. Keep new UI on these; layouts must stay responsive (`sm/md/lg` breakpoints are the existing pattern).
+- Notifications: **Sonner only** — `toast` from `sonner`; `<Toaster />` is mounted in `src/app/layout.tsx`. Never `alert()`, never Lorem Ipsum.
+- Login/Register pages exist at `/login` and `/register` and are wired to Better Auth (`authClient.signIn/signUp.email`, Google via `authClient.signIn.social`); only password reset is a demo toast ("isn't connected yet"). Navbar gates on `authClient.useSession()` (skeleton while pending, authed dropdown with sign-out).
+- Logo: assets live at `public/logo.png` (light bg) and `public/logo-on-dark.png` (navy bg); `src/components/logo.tsx` renders them via `next/image` with `variant="on-light" | "on-dark"`. Never move, rename, or regenerate the assets — swap the `<Image>` only if the files change.
+- Routes: `/`, `/studios` (+ `?category=` deep links), `/studios/[id]`, `/studios/edit/[id]`, `/add-studio`, `/my-listings`, `/my-bookings`, `/dashboard`, `/login`, `/register`, `/profile`, `/about`, `/how-it-works`, `/privacy`, `/terms`. Home section anchors (`#featured-studios`, `#categories`, `#how-it-works`, `#about`) still exist for in-page links.
+- **API layer**: `src/lib/studios-api.ts` — all fetches go through it, base URL `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`, backend = `..\studiospace-server`). Never hardcode URLs elsewhere. Backend has **no auth** — identity is `hostEmail`/`userEmail` body fields. Known backend issues (report, don't fix): CORS `Allow-Methods` lacks `PATCH` (cancel-booking blocked in browser); Atlas IP whitelist TLS error (alert 80) → 500s when the user's IP isn't in Atlas Network Access.
+- Legal pages `/privacy` and `/terms` are content-only: they pass a `sections` array into the shared `src/components/legal-page.tsx` (navy hero + sticky "On this page" TOC + closing contact card). Bump the `updated` date when editing either page's copy.
+- Avatar/studio photos are user-supplied URLs of unknown hosts, so they stay as `<img>` with an `eslint-disable-next-line @next/next/no-img-element` comment (see `src/app/studios/[id]/page.tsx`) — do not switch them to `next/image` without adding `images.remotePatterns`.
+- Assignment rules: App Router + TypeScript only; no Vite/React SPA, no alternative frameworks, no unnecessary new libraries. **Do not modify the backend repo or its `.env`/JWT/Better Auth server config.**
