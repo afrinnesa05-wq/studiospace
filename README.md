@@ -2,7 +2,7 @@
 
 **Peer-to-Peer Creative Workspace & Production Studio Sharing Platform**
 
-🌐 **Live Website:** `https://YOUR-LIVE-URL.vercel.app`
+🌐 **Live Website:** `https://studiospace-six.vercel.app`
 
 StudioSpace is a platform that connects creative professionals with workspace and production studio owners. Users can explore studios, view detailed information, list their own creative spaces, and book suitable studios.
 
