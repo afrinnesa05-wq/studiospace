@@ -1,35 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Check } from "lucide-react"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 
 function NewsletterForm() {
   const [email, setEmail] = useState("")
-  const [subscribed, setSubscribed] = useState(false)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (email.trim() === "") return
-    setSubscribed(true)
-  }
-
-  if (subscribed) {
-    return (
-      <div
-        role="status"
-        className="flex items-start gap-3 rounded-lg border border-[#3B82F6]/30 bg-[#3B82F6]/10 px-4 py-3"
-      >
-        <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#3B82F6] text-white">
-          <Check aria-hidden className="size-3" strokeWidth={3} />
-        </span>
-        <p className="text-sm leading-relaxed text-white/80">
-          You&apos;re subscribed — this is a frontend demo, so no email was
-          actually sent.
-        </p>
-      </div>
+    toast.success(
+      "You're subscribed — this is a frontend demo, so no email was actually sent."
     )
+    setEmail("")
   }
 
   return (

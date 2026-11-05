@@ -16,11 +16,11 @@ const quickLinks = navLinks.map((link) => ({
 }))
 
 const popularCategories = [
-  { label: "Photo Studios", href: "/studios?category=photo-studios" },
-  { label: "Sound Stages", href: "/studios?category=sound-stages" },
-  { label: "Podcast Rooms", href: "/studios?category=podcast-rooms" },
-  { label: "Music Suites", href: "/studios?category=music-suites" },
-  { label: "Art Workshops", href: "/studios?category=art-workshops" },
+  { label: "Photo Studios", href: "/studios?category=Photo%20Studios" },
+  { label: "Sound Stages", href: "/studios?category=Sound%20Stages" },
+  { label: "Podcast Rooms", href: "/studios?category=Podcast%20Rooms" },
+  { label: "Music Suites", href: "/studios?category=Music%20Suites" },
+  { label: "Art Workshops", href: "/studios?category=Art%20Workshops" },
 ] as const
 
 const socialLinks = [
@@ -45,7 +45,7 @@ function Footer() {
               className="inline-flex items-center"
               aria-label="StudioSpace home"
             >
-              <Logo wordmarkClassName="text-white" />
+              <Logo variant="on-dark" />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
               StudioSpace connects creators with inspiring creative spaces —
@@ -94,7 +94,7 @@ function Footer() {
             </h2>
             <ul className="mt-4 flex flex-col gap-2.5">
               {popularCategories.map((category) => (
-                <li key={category.href}>
+                <li key={category.label}>
                   <Link
                     href={category.href}
                     className="text-sm text-white/70 transition-colors duration-300 hover:text-[#3B82F6]"
