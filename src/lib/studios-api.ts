@@ -1,5 +1,9 @@
+
 import { authClient } from "@/lib/auth-client"
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+
 export type ExploreStudio = {
   id: string
   name: string
@@ -109,22 +113,45 @@ type ApiEnvelope = {
   errors?: string[]
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+// Common API request function with JWT authentication
+async function request<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
   let res: Response
 
   try {
+    let token: string | undefined
+
+    const { data, error } = await authClient.token()
+
+    if (error) {
+      console.error("JWT token error:", error.message)
+    } else {
+      token = data?.token
+    }
+
+    const headers = new Headers(init?.headers)
+
+    if (init?.body) {
+      headers.set("Content-Type", "application/json")
+    }
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`)
+    }
+
     res = await fetch(`${API_BASE}${path}`, {
       ...init,
       credentials: "include",
       cache: "no-store",
-      headers: {
-        ...(init?.body ? { "Content-Type": "application/json" } : {}),
-        ...init?.headers,
-      },
+      headers,
     })
-  } catch {
+  } catch (error) {
+    console.error("API request error:", error)
+
     throw new ApiError(
-      `Could not reach the studio API at ${API_BASE}. The server may be offline, or the request was blocked by the browser (CORS).`,
+      `Could not reach the studio API at ${API_BASE}. Check the server or authentication.`,
       0
     )
   }
@@ -139,14 +166,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!res.ok || body?.success === false) {
     throw new ApiError(
-      body?.message || `The studio API returned an error (status ${res.status}).`,
+      body?.message ||
+        `The studio API returned an error (status ${res.status}).`,
       res.status,
       body?.errors
     )
   }
 
   if (body === null) {
-    throw new ApiError("The studio API returned an unexpected response.", res.status)
+    throw new ApiError(
+      "The studio API returned an unexpected response.",
+      res.status
+    )
   }
 
   return body as T
@@ -175,7 +206,8 @@ function mapStudio(doc: ApiStudioDoc): ExploreStudio {
     category: doc.category || "Uncategorized",
     description: doc.description || "",
     location: doc.location || "",
-    pricePerHour: typeof doc.hourlyRate === "number" ? doc.hourlyRate : 0,
+    pricePerHour:
+      typeof doc.hourlyRate === "number" ? doc.hourlyRate : 0,
     rating: typeof doc.rating === "number" ? doc.rating : 0,
     amenities: Array.isArray(doc.amenities) ? doc.amenities : [],
     hostName: doc.hostName,
@@ -191,15 +223,29 @@ const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/
 function buildQuery(params: StudioListParams): string {
   const query = new URLSearchParams()
 
-  if (params.search?.trim()) query.set("search", params.search.trim())
-  if (params.category?.trim()) query.set("category", params.category.trim())
-  if (params.location?.trim()) query.set("location", params.location.trim())
+  if (params.search?.trim()) {
+    query.set("search", params.search.trim())
+  }
 
-  if (typeof params.minPrice === "number" && !Number.isNaN(params.minPrice)) {
+  if (params.category?.trim()) {
+    query.set("category", params.category.trim())
+  }
+
+  if (params.location?.trim()) {
+    query.set("location", params.location.trim())
+  }
+
+  if (
+    typeof params.minPrice === "number" &&
+    !Number.isNaN(params.minPrice)
+  ) {
     query.set("minPrice", String(params.minPrice))
   }
 
-  if (typeof params.maxPrice === "number" && !Number.isNaN(params.maxPrice)) {
+  if (
+    typeof params.maxPrice === "number" &&
+    !Number.isNaN(params.maxPrice)
+  ) {
     query.set("maxPrice", String(params.maxPrice))
   }
 
@@ -244,8 +290,14 @@ export async function fetchStudios(
   }
 }
 
-export async function fetchFeaturedStudios(limit = 6): Promise<ExploreStudio[]> {
-  const result = await fetchStudios({ sort: "rating_desc", limit })
+export async function fetchFeaturedStudios(
+  limit = 6
+): Promise<ExploreStudio[]> {
+  const result = await fetchStudios({
+    sort: "rating_desc",
+    limit,
+  })
+
   return result.studios
 }
 
@@ -254,7 +306,11 @@ export async function fetchCategoryCounts(
 ): Promise<Record<string, number>> {
   const entries = await Promise.all(
     categories.map(async (category) => {
-      const result = await fetchStudios({ category, limit: 1 })
+      const result = await fetchStudios({
+        category,
+        limit: 1,
+      })
+
       return [category, result.pagination.total] as const
     })
   )
@@ -269,26 +325,31 @@ export async function fetchStudioById(
   if (!OBJECT_ID_PATTERN.test(id)) return null
 
   try {
-    const body = await request<{ success: boolean; data: ApiStudioDoc }>(
-      `/api/studios/${encodeURIComponent(id)}`,
-      { signal }
-    )
+    const body = await request<{
+      success: boolean
+      data: ApiStudioDoc
+    }>(`/api/studios/${encodeURIComponent(id)}`, { signal })
 
     return mapStudio(body.data)
   } catch (error) {
-    if (error instanceof ApiError && error.status === 404) return null
+    if (error instanceof ApiError && error.status === 404) {
+      return null
+    }
+
     throw error
   }
 }
 
-export async function createStudio(input: StudioInput): Promise<ExploreStudio> {
-  const body = await request<{ success: boolean; data: ApiStudioDoc }>(
-    "/api/studios",
-    {
-      method: "POST",
-      body: JSON.stringify(input),
-    }
-  )
+export async function createStudio(
+  input: StudioInput
+): Promise<ExploreStudio> {
+  const body = await request<{
+    success: boolean
+    data: ApiStudioDoc
+  }>("/api/studios", {
+    method: "POST",
+    body: JSON.stringify(input),
+  })
 
   return mapStudio(body.data)
 }
@@ -297,13 +358,13 @@ export async function updateStudio(
   id: string,
   input: Partial<StudioInput>
 ): Promise<ExploreStudio> {
-  const body = await request<{ success: boolean; data: ApiStudioDoc }>(
-    `/api/studios/${encodeURIComponent(id)}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(input),
-    }
-  )
+  const body = await request<{
+    success: boolean
+    data: ApiStudioDoc
+  }>(`/api/studios/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  })
 
   return mapStudio(body.data)
 }
@@ -370,10 +431,14 @@ function mapBooking(doc: ApiBookingDoc): Booking {
     bookingDate: doc.bookingDate,
     startTime: doc.startTime,
     endTime: doc.endTime,
-    hourlyRate: typeof doc.hourlyRate === "number" ? doc.hourlyRate : 0,
-    totalPrice: typeof doc.totalPrice === "number" ? doc.totalPrice : 0,
+    hourlyRate:
+      typeof doc.hourlyRate === "number" ? doc.hourlyRate : 0,
+    totalPrice:
+      typeof doc.totalPrice === "number" ? doc.totalPrice : 0,
     status:
-      status === "Confirmed" || status === "Cancelled" ? status : "Pending",
+      status === "Confirmed" || status === "Cancelled"
+        ? status
+        : "Pending",
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   }
@@ -385,31 +450,44 @@ export async function fetchMyBookings(
 ): Promise<Booking[]> {
   const query = new URLSearchParams({ email })
 
-  const body = await request<{ success: boolean; data: ApiBookingDoc[] }>(
+  const body = await request<{
+    success: boolean
+    data: ApiBookingDoc[]
+  }>(
     `/api/bookings/my-bookings?${query.toString()}`,
     { signal }
   )
 
-  return Array.isArray(body.data) ? body.data.map(mapBooking) : []
+  return Array.isArray(body.data)
+    ? body.data.map(mapBooking)
+    : []
 }
 
-export async function createBooking(input: BookingInput): Promise<Booking> {
-  const body = await request<{ success: boolean; data: ApiBookingDoc }>(
-    "/api/bookings",
-    {
-      method: "POST",
-      body: JSON.stringify(input),
-    }
-  )
+export async function createBooking(
+  input: BookingInput
+): Promise<Booking> {
+  const body = await request<{
+    success: boolean
+    data: ApiBookingDoc
+  }>("/api/bookings", {
+    method: "POST",
+    body: JSON.stringify(input),
+  })
 
   return mapBooking(body.data)
 }
 
-export async function cancelBooking(id: string, email: string): Promise<void> {
-  await request(`/api/bookings/${encodeURIComponent(id)}/cancel`, {
-    method: "PATCH",
-    body: JSON.stringify({ email }),
-  })
+export async function cancelBooking(
+  id: string,
+  email: string
+): Promise<void> {
+  await request(
+    `/api/bookings/${encodeURIComponent(id)}/cancel`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ email }),
+    }
+  )
 }
 
 export const studioCategories = [
