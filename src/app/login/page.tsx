@@ -25,9 +25,15 @@ function LoginPage() {
             </Link>
 
             <p className="mt-8 flex items-center gap-3 text-xs font-semibold tracking-[0.14em] text-[#3B82F6] uppercase dark:text-[#93C5FD]">
-              <span aria-hidden className="h-px w-6 bg-[#3B82F6] dark:bg-[#60A5FA]" />
+              <span
+                aria-hidden
+                className="h-px w-6 bg-[#3B82F6] dark:bg-[#60A5FA]"
+              />
               Welcome back
-              <span aria-hidden className="h-px w-6 bg-[#3B82F6] dark:bg-[#60A5FA]" />
+              <span
+                aria-hidden
+                className="h-px w-6 bg-[#3B82F6] dark:bg-[#60A5FA]"
+              />
             </p>
 
             <h1 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-[#0B1F3A] dark:text-[#F8FAFC]">
@@ -40,6 +46,15 @@ function LoginPage() {
           </div>
 
           <LoginForm />
+
+          <div className="mt-4 text-center">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-semibold text-[#3B82F6] transition hover:text-[#2563EB] hover:underline dark:text-[#93C5FD] dark:hover:text-[#BFDBFE]"
+            >
+              Forgot Password?
+            </Link>
+          </div>
         </div>
       </div>
     </main>
@@ -47,3 +62,4 @@ function LoginPage() {
 }
 
 export default LoginPage
+
