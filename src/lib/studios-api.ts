@@ -1,6 +1,5 @@
-
-const API_BASE = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-
+import { authClient } from "@/lib/auth-client"
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 export type ExploreStudio = {
   id: string
   name: string
