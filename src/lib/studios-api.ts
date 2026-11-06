@@ -1,6 +1,4 @@
 
-import { authClient } from "@/lib/auth-client"
-
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
@@ -113,31 +111,40 @@ type ApiEnvelope = {
   errors?: string[]
 }
 
-// Common API request function with JWT authentication
+// Common API request function with optional JWT authentication
 async function request<T>(
   path: string,
-  init?: RequestInit
+  init?: RequestInit,
+  requiresAuth = false
 ): Promise<T> {
   let res: Response
 
   try {
-    let token: string | undefined
-
-    const { data, error } = await authClient.token()
-
-    if (error) {
-      console.error("JWT token error:", error.message)
-    } else {
-      token = data?.token
-    }
-
     const headers = new Headers(init?.headers)
 
     if (init?.body) {
       headers.set("Content-Type", "application/json")
     }
 
-    if (token) {
+    // Get JWT token only for protected API requests
+    if (requiresAuth) {
+      const tokenResponse = await fetch("/api/auth/token", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      })
+
+      if (!tokenResponse.ok) {
+        throw new Error("Could not get authentication token.")
+      }
+
+      const tokenData = await tokenResponse.json()
+      const token = tokenData.token
+
+      if (!token) {
+        throw new Error("JWT token is missing.")
+      }
+
       headers.set("Authorization", `Bearer ${token}`)
     }
 
@@ -151,7 +158,7 @@ async function request<T>(
     console.error("API request error:", error)
 
     throw new ApiError(
-      `Could not reach the studio API at ${API_BASE}. Check the server or authentication.`,
+      "Could not authenticate or reach the studio API.",
       0
     )
   }
@@ -346,10 +353,14 @@ export async function createStudio(
   const body = await request<{
     success: boolean
     data: ApiStudioDoc
-  }>("/api/studios", {
-    method: "POST",
-    body: JSON.stringify(input),
-  })
+  }>(
+    "/api/studios",
+    {
+      method: "POST",
+      body: JSON.stringify(input),
+    },
+    true
+  )
 
   return mapStudio(body.data)
 }
@@ -361,18 +372,26 @@ export async function updateStudio(
   const body = await request<{
     success: boolean
     data: ApiStudioDoc
-  }>(`/api/studios/${encodeURIComponent(id)}`, {
-    method: "PUT",
-    body: JSON.stringify(input),
-  })
+  }>(
+    `/api/studios/${encodeURIComponent(id)}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(input),
+    },
+    true
+  )
 
   return mapStudio(body.data)
 }
 
 export async function deleteStudio(id: string): Promise<void> {
-  await request(`/api/studios/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  })
+  await request(
+    `/api/studios/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+    true
+  )
 }
 
 export async function fetchMyStudios(
@@ -455,7 +474,8 @@ export async function fetchMyBookings(
     data: ApiBookingDoc[]
   }>(
     `/api/bookings/my-bookings?${query.toString()}`,
-    { signal }
+    { signal },
+    true
   )
 
   return Array.isArray(body.data)
@@ -469,10 +489,14 @@ export async function createBooking(
   const body = await request<{
     success: boolean
     data: ApiBookingDoc
-  }>("/api/bookings", {
-    method: "POST",
-    body: JSON.stringify(input),
-  })
+  }>(
+    "/api/bookings",
+    {
+      method: "POST",
+      body: JSON.stringify(input),
+    },
+    true
+  )
 
   return mapBooking(body.data)
 }
@@ -486,7 +510,8 @@ export async function cancelBooking(
     {
       method: "PATCH",
       body: JSON.stringify({ email }),
-    }
+    },
+    true
   )
 }
 
@@ -497,3 +522,4 @@ export const studioCategories = [
   "Music Suites",
   "Art Workshops",
 ] as const
+
